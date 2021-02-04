@@ -60,7 +60,7 @@ routes.put('/:projectId', async (req, res) => {
     }, { new: true })
 
     project.tasks = [];
-    await Task.remove({ project: project._id })
+    await Task.deleteOne({ project: project._id })
 
     await Promise.all(tasks.map(async task => {
       const projectTask = new Task({ ...task, project: project._id });
@@ -83,7 +83,7 @@ routes.delete('/:projectId', async (req, res) => {
   try {
     await Project.findByIdAndRemove(req.params.projectId)
 
-    return res.send()
+    return res.send({ message: "Project deleted" })
   } catch (err) {
     return res.status(400).send({ error: err })
   }

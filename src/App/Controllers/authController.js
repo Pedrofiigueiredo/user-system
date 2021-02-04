@@ -88,7 +88,7 @@ routes.post('/forgot_password', async (req, res) => {
       if (err)
         return res.status(400).send({ error: err })
       
-      return res.status(200).send()
+      return res.send({ message: "Email sended" })
     })
   } catch (err) {
     res.status(400).send({ error: "Error" })
@@ -96,7 +96,7 @@ routes.post('/forgot_password', async (req, res) => {
 })
 
 routes.post('/reset_password', async (req, res) => {
-  const { email, token, password } = req.body
+  const { email, token, newPassword } = req.body
 
   try {
     const user = await User.findOne({ email })
@@ -113,10 +113,10 @@ routes.post('/reset_password', async (req, res) => {
     if (now > user.passwordResetExpires)
       return res.status(401).send({ error: 'Token expires, generate another' })
 
-    user.password = password
+    user.password = newPassword
     await user.save()
 
-    return res.status(200).send()
+    return res.send({ message: "Reset password succeed" })
 
   } catch (err) {
     return res.status(400).send({ error: 'Cannot reset password, try again' })
