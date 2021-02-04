@@ -72,15 +72,12 @@ routes.post('/forgot_password', async (req, res) => {
     const now = new Date()
     now.setHours(now.getHours() + 1)
 
-    await User.updateOne({_id: user.id}, {
+    await User.findByIdAndUpdate(user._id, {
       '$set': {
         passwordResetToken: token,
-        passwordResetExpires: now
+        passwordResetExpires: now,
       }
-    })
-
-    console.log(token, now)
-    console.log(user.passwordResetToken, user.passwordResetExpires)
+    }, { new: true });
 
     mailer.sendMail({
       to: email,
@@ -117,8 +114,9 @@ routes.post('/reset_password', async (req, res) => {
       return res.status(401).send({ error: 'Token expires, generate another' })
 
     user.password = password
+    await user.save()
 
-    return res.status(200)
+    return res.status(200).send()
 
   } catch (err) {
     return res.status(400).send({ error: 'Cannot reset password, try again' })
