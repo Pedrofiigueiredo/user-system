@@ -1,7 +1,7 @@
 const express = require("express")
 const bodyParser = require("body-parser")
-const routes = require('./Controllers/authController')
-const routes2 = require('./Controllers/projectController')
+const routes = require('./App/Controllers/authController')
+const routes2 = require('./App/Controllers/projectController')
 
 const app = express()
 
